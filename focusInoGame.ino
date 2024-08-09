@@ -37,6 +37,24 @@ unsigned long lastPressTime[ARR_LEN];
 int chosenIndexsArr[MAX_TIMES];
 int pressedIndexs[MAX_TIMES];
 
+void btnsSetup() {
+  for (int i = 0; i < ARR_LEN; i++) {
+    if (initProgram) {
+      pinMode(btnsArr[i], INPUT_PULLUP);
+    }
+    lastValArr[i] = digitalRead(btnsArr[i]);
+    lastPressTime[i] = millis();
+  }
+}
+void ledsSetup() {
+  for (int i = 0; i < ARR_LEN; i++) {
+    if (initProgram) {
+      pinMode(ledsArr[i], OUTPUT);
+    }
+    digitalWrite(ledsArr[i], LOW);  //making sure that all the leds are off
+  }
+}
+
 void setup() {
   // put your setup code here, to run once:
 
