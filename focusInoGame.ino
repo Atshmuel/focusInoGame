@@ -54,6 +54,12 @@ void ledsSetup() {
     digitalWrite(ledsArr[i], LOW);  //making sure that all the leds are off
   }
 }
+void chosenIndexsSetup() {
+  for (int i = 0; i < MAX_TIMES; i++) {
+    chosenIndexsArr[i] = -1;
+    pressedIndexs[i] = -1;
+  }
+}
 
 void setup() {
   // put your setup code here, to run once:
