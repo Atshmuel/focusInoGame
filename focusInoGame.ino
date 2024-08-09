@@ -60,6 +60,12 @@ void chosenIndexsSetup() {
     pressedIndexs[i] = -1;
   }
 }
+void ledOn(int num) {
+  digitalWrite(ledsArr[num], HIGH);
+}
+void ledOff(int num) {
+  digitalWrite(ledsArr[num], LOW);
+}
 
 void setup() {
   // put your setup code here, to run once:
