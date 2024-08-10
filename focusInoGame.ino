@@ -32,7 +32,7 @@ int pressCounter = 0;
 
 bool initProgram = true;
 bool isWon;
-bool restart=false;
+bool restart = false;
 
 const int btnsArr[ARR_LEN] = { greenBtn, redBtn, yellowBtn, blueBtn };
 const int ledsArr[ARR_LEN] = { greenLed, redLed, yellowLed, blueLed };
@@ -108,14 +108,16 @@ void showLights() {
   delay(maxDiff / 2);
   playTone(0, maxDiff / 3);
 }
-int btnPressed() {
+int btnPressed(bool count) {
   int btnNum = -1;
   for (int i = 0; i < ARR_LEN; i++) {
     currValArr[i] = digitalRead(btnsArr[i]);
     if (!currValArr[i] && lastValArr[i] && (millis() - lastPressTime[i] > timeBuffer)) {
       lastPressTime[i] = millis();
       btnNum = i;
-      pressedIndexs[pressCounter++] = btnNum;
+      if (count) {
+        pressedIndexs[pressCounter++] = btnNum;
+      }
     }
     lastValArr[i] = currValArr[i];
   }
@@ -137,7 +139,7 @@ void startGame() {
   ledsSetup();
   chosenIndexsSetup();
   chooseRandomLeds();
-  if (restart) { delay(maxDiff/3); }
+  if (restart) { delay(maxDiff / 3); }
   showLights();
   currState = GAME_IS_ON;
   isWon = true;
@@ -145,7 +147,7 @@ void startGame() {
   pressCounter = 0;
 }
 void gameIsOn() {
-  int currBtnNum = btnPressed();
+  int currBtnNum = btnPressed(true);
   if (currBtnNum != -1) {
     if (pressCounter == 1) {
       startTime = millis();
@@ -168,9 +170,10 @@ void gameIsOn() {
   }
 }
 void winOrLose(bool win) {
-  int currBtnNum = btnPressed();
   win ? ledOn(0) : ledOn(1);
   win ? playTone(1, 0) : playTone(2, 0);
+  delay(timeBuffer);
+  int currBtnNum = btnPressed(false);
   if (currBtnNum != -1) {
     currState = START_GAME;
     win ? playTone(1, -1) : playTone(2, -1);
@@ -201,6 +204,3 @@ void loop() {
       break;
   }
 }
-
-
-
