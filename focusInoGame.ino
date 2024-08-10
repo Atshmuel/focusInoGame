@@ -137,6 +137,29 @@ void startGame() {
   currectPress = 0;
   pressCounter = 0;
 }
+void gameIsOn() {
+  int currBtnNum = btnPressed();
+  if (currBtnNum != -1) {
+    if (pressCounter == 1) {
+      startTime = millis();
+    }
+    if (pressCounter == MAX_TIMES) {
+      endTime = millis();
+    }
+  }
+  if (pressCounter == MAX_TIMES) {
+    for (int i = 0; i < MAX_TIMES; i++) {
+      currectPress += includes(pressedIndexs[i]);
+    }
+    if (endTime - startTime < maxDiff && currectPress == 3 && isWon) {
+      currState = WIN_GAME;
+    }
+    if (currectPress != MAX_TIMES || endTime - startTime > maxDiff) {
+      isWon = false;
+      currState = LOSE_GAME;
+    }
+  }
+}
 
 //end of game functions
 
