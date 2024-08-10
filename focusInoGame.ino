@@ -37,6 +37,7 @@ unsigned long lastPressTime[ARR_LEN];
 int chosenIndexsArr[MAX_TIMES];
 int pressedIndexs[MAX_TIMES];
 
+//helpers
 void btnsSetup() {
   for (int i = 0; i < ARR_LEN; i++) {
     if (initProgram) {
@@ -113,7 +114,6 @@ int btnPressed() {
   }
   return btnNum;
 }
-//helper
 bool includes(int num) {
   for (int i = 0; i < MAX_TIMES; i++) {
     if (chosenIndexsArr[i] == num) {
@@ -122,19 +122,13 @@ bool includes(int num) {
   }
   return false;
 }
-
-
-
-
-
-
-
+//end of helpers
 
 void setup() {
-  // put your setup code here, to run once:
-
+  pinMode(buzzerPin, OUTPUT);
+  randomSeed(analogRead(A1));
+  currState = START_GAME;
 }
-
 void loop() {
   switch (currState) {
     case START_GAME:
