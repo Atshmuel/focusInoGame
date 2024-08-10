@@ -100,9 +100,19 @@ void showLights() {
   delay(maxDiff / 2);
   playTone(0, maxDiff / 3);
 }
-
-
-
+int btnPressed() {
+  int btnNum = -1;
+  for (int i = 0; i < ARR_LEN; i++) {
+    currValArr[i] = digitalRead(btnsArr[i]);
+    if (!currValArr[i] && lastValArr[i] && (millis() - lastPressTime[i] > timeBuffer)) {
+      lastPressTime[i] = millis();
+      btnNum = i;
+      pressedIndexs[pressCounter++] = btnNum;
+    }
+    lastValArr[i] = currValArr[i];
+  }
+  return btnNum;
+}
 //helper
 bool includes(int num) {
   for (int i = 0; i < MAX_TIMES; i++) {
@@ -112,6 +122,12 @@ bool includes(int num) {
   }
   return false;
 }
+
+
+
+
+
+
 
 
 void setup() {
