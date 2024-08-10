@@ -124,6 +124,22 @@ bool includes(int num) {
 }
 //end of helpers
 
+//game functions
+void startGame() {
+  btnsSetup();
+  ledsSetup();
+  chosenIndexsSetup();
+  chooseRandomLeds();
+  if (restart) { delay(maxDiff/3); }
+  showLights();
+  currState = GAME_IS_ON;
+  isWon = true;
+  currectPress = 0;
+  pressCounter = 0;
+}
+
+//end of game functions
+
 void setup() {
   pinMode(buzzerPin, OUTPUT);
   randomSeed(analogRead(A1));
