@@ -66,6 +66,18 @@ void ledOn(int num) {
 void ledOff(int num) {
   digitalWrite(ledsArr[num], LOW);
 }
+void playTone(int num, int time) {
+  if (time == -1) {
+    noTone(buzzerPin);
+  }
+  if (time == 0) {
+    tone(buzzerPin, tonesArr[num]);
+  }
+
+  if (time > 0) {
+    tone(buzzerPin, tonesArr[num], time);
+  }
+}
 
 void setup() {
   // put your setup code here, to run once:
