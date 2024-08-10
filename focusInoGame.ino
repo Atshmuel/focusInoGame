@@ -1,3 +1,5 @@
+#include "pitches.h"
+
 #define ARR_LEN 4
 #define MAX_TIMES 3
 
@@ -13,7 +15,12 @@
 
 #define buzzerPin 5
 
-const int timeBuffer = 150;
+#define START_GAME 42
+#define GAME_IS_ON 43
+#define WIN_GAME 44
+#define LOSE_GAME 45
+
+const int timeBuffer = 50;
 const int maxDiff = 1000;
 
 unsigned long startTime;
@@ -187,10 +194,10 @@ void loop() {
       gameIsOn();
       break;
     case WIN_GAME:
-      winGame();
+      winOrLose(isWon);
       break;
     case LOSE_GAME:
-      loseGame();
+      winOrLose(isWon);
       break;
   }
 }
