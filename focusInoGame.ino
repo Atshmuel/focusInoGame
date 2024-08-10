@@ -160,7 +160,16 @@ void gameIsOn() {
     }
   }
 }
-
+void winOrLose(bool win) {
+  int currBtnNum = btnPressed();
+  win ? ledOn(0) : ledOn(1);
+  win ? playTone(1, 0) : playTone(2, 0);
+  if (currBtnNum != -1) {
+    currState = START_GAME;
+    win ? playTone(1, -1) : playTone(2, -1);
+    restart = true;
+  }
+}
 //end of game functions
 
 void setup() {
