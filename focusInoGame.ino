@@ -66,6 +66,17 @@ void ledOn(int num) {
 void ledOff(int num) {
   digitalWrite(ledsArr[num], LOW);
 }
+void chooseRandomLeds() {
+  int chosenNum;
+  for (int i = 0; i < MAX_TIMES; i++) {
+    chosenNum = random(0, ARR_LEN);
+    if (!includes(chosenNum)) {
+      chosenIndexsArr[i] = chosenNum;
+    } else {
+      i--;
+    }
+  }
+}
 void playTone(int num, int time) {
   if (time == -1) {
     noTone(buzzerPin);
