@@ -136,8 +136,21 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  switch (currState) {
+    case START_GAME:
+      startGame();
+      initProgram = false;
+      break;
+    case GAME_IS_ON:
+      gameIsOn();
+      break;
+    case WIN_GAME:
+      winGame();
+      break;
+    case LOSE_GAME:
+      loseGame();
+      break;
+  }
 }
 
 
