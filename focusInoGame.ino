@@ -60,12 +60,6 @@ void chosenIndexsSetup() {
     pressedIndexs[i] = -1;
   }
 }
-void ledOn(int num) {
-  digitalWrite(ledsArr[num], HIGH);
-}
-void ledOff(int num) {
-  digitalWrite(ledsArr[num], LOW);
-}
 void chooseRandomLeds() {
   int chosenNum;
   for (int i = 0; i < MAX_TIMES; i++) {
@@ -89,6 +83,27 @@ void playTone(int num, int time) {
     tone(buzzerPin, tonesArr[num], time);
   }
 }
+void ledOn(int num) {
+  digitalWrite(ledsArr[num], HIGH);
+}
+void ledOff(int num) {
+  digitalWrite(ledsArr[num], LOW);
+}
+void showLights() {
+  for (int i = 0; i < MAX_TIMES; i++) {
+    ledOn(chosenIndexsArr[i]);
+  }
+  delay(maxDiff);
+  for (int i = 0; i < MAX_TIMES; i++) {
+    ledOff(chosenIndexsArr[i]);
+  }
+  delay(maxDiff / 2);
+  playTone(0, maxDiff / 3);
+}
+
+
+
+//helper
 bool includes(int num) {
   for (int i = 0; i < MAX_TIMES; i++) {
     if (chosenIndexsArr[i] == num) {
@@ -97,6 +112,7 @@ bool includes(int num) {
   }
   return false;
 }
+
 
 void setup() {
   // put your setup code here, to run once:
