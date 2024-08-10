@@ -78,6 +78,14 @@ void playTone(int num, int time) {
     tone(buzzerPin, tonesArr[num], time);
   }
 }
+bool includes(int num) {
+  for (int i = 0; i < MAX_TIMES; i++) {
+    if (chosenIndexsArr[i] == num) {
+      return true;
+    }
+  }
+  return false;
+}
 
 void setup() {
   // put your setup code here, to run once:
@@ -88,3 +96,6 @@ void loop() {
   // put your main code here, to run repeatedly:
 
 }
+
+
+
