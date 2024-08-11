@@ -45,20 +45,14 @@ int chosenIndexsArr[MAX_TIMES];
 int pressedIndexs[MAX_TIMES];
 
 //helpers
-void btnsSetup() {
+void btnAndLedSetup() {
   for (int i = 0; i < ARR_LEN; i++) {
     if (initProgram) {
       pinMode(btnsArr[i], INPUT_PULLUP);
+      pinMode(ledsArr[i], OUTPUT);
     }
     lastValArr[i] = digitalRead(btnsArr[i]);
     lastPressTime[i] = millis();
-  }
-}
-void ledsSetup() {
-  for (int i = 0; i < ARR_LEN; i++) {
-    if (initProgram) {
-      pinMode(ledsArr[i], OUTPUT);
-    }
     digitalWrite(ledsArr[i], LOW);  //making sure that all the leds are off
   }
 }
@@ -131,15 +125,23 @@ bool includes(int num) {
   }
   return false;
 }
+bool repeats() {
+  for (int i = 0; i < MAX_TIMES; i++) {
+    for (int k = i + 1; k < MAX_TIMES; k++) {
+      if (pressedIndexs[i] == pressedIndexs[k])
+        return true;
+    }
+  }
+  return false;
+}
 //end of helpers
 
 //game functions
 void startGame() {
-  btnsSetup();
-  ledsSetup();
+  btnAndLedSetup();
   chosenIndexsSetup();
   chooseRandomLeds();
-  if (restart) { delay(maxDiff / 3); }
+  if (restart) { delay(maxDiff / 5); }
   showLights();
   currState = GAME_IS_ON;
   isWon = true;
@@ -148,22 +150,23 @@ void startGame() {
 }
 void gameIsOn() {
   int currBtnNum = btnPressed(true);
-  if (currBtnNum != -1) {
-    if (pressCounter == 1) {
-      startTime = millis();
-    }
-    if (pressCounter == MAX_TIMES) {
-      endTime = millis();
-    }
+  if (currBtnNum != -1 && pressCounter == 1) {
+    startTime = millis();
   }
   if (pressCounter == MAX_TIMES) {
-    for (int i = 0; i < MAX_TIMES; i++) {
-      currectPress += includes(pressedIndexs[i]);
-    }
-    if (endTime - startTime < maxDiff && currectPress == 3 && isWon) {
-      currState = WIN_GAME;
-    }
-    if (currectPress != MAX_TIMES || endTime - startTime > maxDiff) {
+    endTime = millis();
+    if (!repeats()) {
+      for (int i = 0; i < MAX_TIMES; i++) {
+        currectPress += includes(pressedIndexs[i]);
+      }
+      if (endTime - startTime < maxDiff && currectPress == MAX_TIMES && isWon) {
+        currState = WIN_GAME;
+      }
+      if (currectPress != MAX_TIMES || endTime - startTime > maxDiff) {
+        isWon = false;
+        currState = LOSE_GAME;
+      }
+    } else {
       isWon = false;
       currState = LOSE_GAME;
     }
@@ -175,9 +178,10 @@ void winOrLose(bool win) {
   delay(timeBuffer);
   int currBtnNum = btnPressed(false);
   if (currBtnNum != -1) {
-    currState = START_GAME;
     win ? playTone(1, -1) : playTone(2, -1);
     restart = true;
+
+    currState = START_GAME;
   }
 }
 //end of game functions
