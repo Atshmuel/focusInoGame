@@ -46,13 +46,9 @@ bool pressedIndexs[ARR_LEN];
 //helpers
 void btnAndLedSetup() {
   for (i = 0; i < ARR_LEN; i++) {
-    if (millis() == 0) {
-      pinMode(btnsArr[i], INPUT_PULLUP);
-      pinMode(ledsArr[i], OUTPUT);
-    }
     lastValArr[i] = digitalRead(btnsArr[i]);
     lastPressTime[i] = millis();
-    digitalWrite(ledsArr[i], LOW);  //making sure that all the leds are off
+    ledOff(i);
   }
 }
 void chosenIndexsSetup() {
@@ -101,7 +97,6 @@ void showLights() {
   delay(maxDiff / 2);
   playTone(0, maxDiff / 3);
 }
-
 int btnPressed() {
   int btnNum = -1;
   for (i = 0; i < ARR_LEN; i++) {
@@ -110,11 +105,11 @@ int btnPressed() {
       lastPressTime[i] = millis();
       btnNum = i;
       if (currState == GAME_IS_ON && pressCounter < 3) {
-      if (pressCounter == 1) {
-        startTime = millis();
-      }
-        pressedIndexs[btnNum] = true;
         pressCounter++;
+        if (pressCounter == 1) {
+          startTime = millis();
+        }
+        pressedIndexs[btnNum] = true;
       }
     }
     lastValArr[i] = currValArr[i];
@@ -130,10 +125,9 @@ void startGame() {
   btnAndLedSetup();
   chosenIndexsSetup();
   chooseRandomLeds();
-  if (millis() != 0) { delay(maxDiff / 5); }
+  if (millis() != 0) { delay(maxDiff / 4); }
   showLights();
   currState = GAME_IS_ON;
-
 }
 void gameIsOn() {
   int currBtnNum = btnPressed();
@@ -142,10 +136,10 @@ void gameIsOn() {
     for (i = 0; i < ARR_LEN; i++) {
       correctPress += pressedIndexs[i] && chosenIndexsArr[i] ? 1 : 0;
     }
-    if (endTime - startTime < maxDiff && correctPress == MAX_TIMES) {
+    if (endTime - startTime <= maxDiff && correctPress == MAX_TIMES) {
       currState = WIN_GAME;
     }
-    if (correctPress != MAX_TIMES || endTime - startTime > maxDiff) {
+    if (endTime - startTime > maxDiff || correctPress != MAX_TIMES) {
       currState = LOSE_GAME;
     }
   }
@@ -153,9 +147,7 @@ void gameIsOn() {
 void winOrLose(bool win) {
   win ? ledOn(0) : ledOn(1);
   win ? playTone(1, 0) : playTone(2, 0);
-  delay(timeBuffer);
-  int currBtnNum = btnPressed();
-  if (currBtnNum != -1) {
+  if (btnPressed() != -1) {
     win ? playTone(1, -1) : playTone(2, -1);
     currState = START_GAME;
   }
@@ -163,7 +155,10 @@ void winOrLose(bool win) {
 //end of game functions
 
 void setup() {
-  Serial.begin(9600);
+  for (i = 0; i < ARR_LEN; i++) {
+    pinMode(btnsArr[i], INPUT_PULLUP);
+    pinMode(ledsArr[i], OUTPUT);
+  }
   pinMode(buzzerPin, OUTPUT);
   randomSeed(analogRead(A1));
   currState = START_GAME;
